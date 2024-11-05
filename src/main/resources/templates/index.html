@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <title>Purrty.io - Home</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .navbar {
+            background-color: #6CACE4;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        .nav-link {
+            color: white;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #1f6e8c;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #6CACE4 0%, #1f6e8c 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid #5865f2;
+        }
+
+        .responsive-banner {
+            width: 100%;
+            height: auto;
+            max-width: 800px;
+        }
+
+        .cta-button {
+            background-color: #5865f2;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #4752c4;
+            transform: translateY(-2px);
+        }
+
+        .wallet-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+        }
+
+        #assets-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#" th:href="@{/}">
+                <img src="/Images/puurr.png" alt="Logo" />
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="playGameBtn" class="nav-link disabled" href="#" onclick="checkWalletConnection(event, '/game')">Play Game</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown">Services</a>
+                        <div class="dropdown-menu" aria-labelledby="servicesDropdown">
+                            <a class="dropdown-item" th:href="@{/minting}">Minting</a>
+                            <a class="dropdown-item" th:href="@{/staking}">Staking</a>
+                            <a class="dropdown-item" th:href="@{/swap}">Swap</a>
+                            <a class="dropdown-item" th:href="@{/vote}">Voting</a>
+                            <a class="dropdown-item" th:href="@{/market}">Marketplace</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="openWalletModal()">Wallet</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Toast Notification Area -->
+<div id="toast-container"></div>
+
+<main class="main-content">
+    <section class="hero">
+        <div class="container">
+            <img th:src="@{/Images/pcsbanner(1).jpg}" alt="PCS Banner" class="responsive-banner" />
+            <p>Your gateway to NFT Minting and trading on Cardano.</p>
+            <a href="#" class="cta-button" onclick="openWalletModal()">Connect</a>
+        </div>
+    </section>
+
+    <div id="assets-container"></div>
+
+    <!-- Wallet Modal -->
+    <div id="walletModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeWalletModal()">&times;</span>
+            <h2>Connect Wallet</h2>
+            <div class="d-flex flex-wrap">
+                <button type="button" onclick="connectWallet('nami')" class="btn btn-outline-primary m-1">
+                    <img src="/Images/nami.jpg" alt="Nami Wallet" class="wallet-icon mr-2"> Nami
+                </button>
+                <button type="button" onclick="connectWallet('eternl')" class="btn btn-outline-primary m-1">
+                    <img src="/Images/eternl.jpg" alt="Eternl Wallet" class="wallet-icon mr-2"> Eternl
+                </button>
+                <button type="button" onclick="connectWallet('lace')" class="btn btn-outline-primary m-1">
+                    <img src="/Images/lace.jpg" alt="Lace Wallet" class="wallet-icon mr-2"> Lace
+                </button>
+                <button type="button" onclick="connectWallet('yoroi')" class="btn btn-outline-primary m-1">
+                    <img src="/Images/yoroi.jpg" alt="Yoroi Wallet" class="wallet-icon mr-2"> Yoroi
+                </button>
+                <button type="button" onclick="connectWallet('vespr')" class="btn btn-outline-primary m-1">
+                    <img src="/Images/vespr.png" alt="Vespr wallet" class="wallet-icon mr-2"> Vespr
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    const walletApis = {
+        nami: window.cardano.nami || null,
+        eternl: window.cardano.eternl || null,
+        lace: window.cardano.lace || null,
+        yoroi: window.cardano.yoroi || null,
+        vespr: window.cardano.vespr || null,
+    };
+
+    let walletAddress;
+    let isWalletConnected = false; // Global variable to track wallet connection status
+
+    async function connectWallet(walletType) {
+        try {
+            // Check if the Cardano wallet provider is available
+            if (typeof window.cardano === 'undefined') {
+                throw new Error("Cardano wallet provider not found.");
+            }
+
+            // Attempt to enable the wallet
+            const wallet = await window.cardano[walletType]?.enable();
+            if (!wallet) throw new Error("Unsupported wallet or wallet not found.");
+
+            console.log("Connected Wallet:", wallet);
+
+            // Get all wallet addresses
+            const allAddresses = await getAllWalletAddresses(wallet);
+            if (allAddresses.length === 0) {
+                throw new Error("No addresses found in the wallet. Please ensure you have a payment address.");
+            }
+
+            walletAddress = allAddresses[0]; // Store the first address in the walletAddress variable
+
+            // Fetch wallet balance and UTXOs
+            const balance = await wallet.getBalance();
+            console.log('Wallet Balance:', balance);
+            const utxos = await wallet.getUtxos();
+
+            // Update the connection status
+            isWalletConnected = true;
+            updatePlayGameButtonState(); // Update button state based on connection status
+            showToast(`Connected to ${walletType.charAt(0).toUpperCase() + walletType.slice(1)}!`);
+
+            // Optional: Fetch and display assets
+            fetchAssets(walletAddress);
+        } catch (error) {
+            console.error("Error connecting wallet:", error.message);
+            showToast(error.message, true);
+        }
+    }
+
+    async function getAllWalletAddresses(wallet) {
+        return wallet.getUsedAddresses(); // Get all used addresses from the wallet
+    }
+
+    async function fetchAssets(address) {
+        const url = `https://cardano-api.example.com/assets?address=${address}`; // Replace with your API URL
+        try {
+            const response = await axios.get(url);
+            const assets = response.data;
+
+            // Update the assets container
+            updateAssetsContainer(assets);
+        } catch (error) {
+            console.error("Error fetching assets:", error);
+        }
+    }
+
+    function updateAssetsContainer(assets) {
+        const assetsContainer = document.getElementById("assets-container");
+        assetsContainer.innerHTML = ""; // Clear previous assets
+        assets.forEach(asset => {
+            const assetElement = document.createElement("div");
+            assetElement.classList.add("asset-item");
+            assetElement.innerText = `${asset.name}: ${asset.quantity}`;
+            assetsContainer.appendChild(assetElement);
+        });
+    }
+
+    function openWalletModal() {
+        document.getElementById("walletModal").style.display = "block"; // Show the modal
+    }
+
+    function closeWalletModal() {
+        document.getElementById("walletModal").style.display = "none"; // Hide the modal
+    }
+
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target === document.getElementById('walletModal')) {
+            closeWalletModal();
+        }
+    }
+
+    // Close modal when clicking on the close button
+    document.querySelector('.close').onclick = closeWalletModal;
+
+    function checkWalletConnection(event, redirectUrl) {
+        event.preventDefault();
+        if (!isWalletConnected) {
+            showToast("Please connect your wallet first!", true);
+        } else {
+            window.location.href = redirectUrl; // Redirect to game page if connected
+        }
+    }
+
+    function updatePlayGameButtonState() {
+        const playGameBtn = document.getElementById("playGameBtn");
+        playGameBtn.classList.toggle("disabled", !isWalletConnected);
+    }
+
+    function showToast(message, isError = false) {
+        const toastContainer = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${isError ? 'danger' : 'success'} fade show`;
+        toast.innerText = message;
+        toast.style.position = 'relative';
+        toast.style.marginTop = '10px';
+        toast.style.zIndex = '1001';
+        toast.setAttribute('role', 'alert');
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toastContainer.removeChild(toast);
+            }, 150); // Remove from DOM after fading out
+        }, 3000); // Display for 3 seconds
+    }
+</script>
+</body>
+</html>

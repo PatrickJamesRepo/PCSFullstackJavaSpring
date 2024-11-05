@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+  <title>Purrty.io - Swap</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    .navbar {
+      background-color: #6CACE4;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-brand img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    .nav-link {
+      color: white;
+      transition: color 0.3s;
+    }
+
+    .nav-link:hover {
+      color: #1f6e8c;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #6CACE4 0%, #1f6e8c 100%);
+      color: white;
+      padding: 4rem 1rem; /* Adjust padding for top/bottom and full width */
+      text-align: center;
+      border-bottom: 5px solid #5865f2;
+      width: 100vw; /* Full width */
+      position: relative; /* Position relative for any absolute children */
+      left: 50%; /* Center the hero */
+      right: 50%; /* Center the hero */
+      margin-left: -50vw; /* Pull it back to full width */
+      margin-right: -50vw; /* Pull it back to full width */
+    }
+
+    .responsive-banner {
+      width: 100%;
+      height: auto;
+      max-width: 800px;
+    }
+
+    .cta-button {
+      background-color: #5865f2;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 5px;
+      font-size: 1.2rem;
+      transition: background-color 0.3s, transform 0.3s;
+      width: 100%; /* Full width */
+      max-width: 300px; /* Set a max width for larger screens */
+      margin: 1rem auto; /* Center the button */
+    }
+
+    .cta-button:hover {
+      background-color: #4752c4;
+      transform: translateY(-2px);
+    }
+
+    .assets {
+      margin-top: -50px; /* Adjust this value to move it up or down */
+      padding: 50px 0; /* Optional: add some padding if needed */
+    }
+
+
+    .asset-card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: white;
+      transition: transform 0.2s;
+    }
+
+    .asset-card:hover {
+      transform: scale(1.05);
+    }
+
+    .wallet-icon {
+      width: 50px;
+      height: 50px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+    }
+
+    /* Full-size swap container */
+    .swap-container {
+      width: 100%; /* Full width */
+      height: 100vh; /* Full height of the viewport */
+      display: flex; /* Flexbox for centering */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      background-color: #ffffff; /* Background color (optional) */
+      padding: 1rem; /* Optional padding */
+      box-sizing: border-box; /* Include padding in width/height calculation */
+      margin-top: -250px; /* Move it up by 250px */
+    }
+
+    /* Media queries for responsiveness */
+    @media (max-width: 480px) {
+      .hero {
+        padding: 2rem 1rem; /* Adjust padding for smaller screens */
+        text-align: center; /* Center text */
+      }
+
+      .cta-button {
+        padding: 10px 20px; /* Adjust button padding */
+        font-size: 1rem; /* Adjust font size */
+      }
+
+      .assets h2 {
+        font-size: 1.5rem; /* Adjust heading size for small screens */
+      }
+
+      .asset-card {
+        margin: 0.5rem 0; /* Decrease margin between cards */
+      }
+
+      .wallet-icon {
+        width: 40px; /* Reduce wallet icon size */
+        height: 40px; /* Reduce wallet icon size */
+      }
+
+      .modal-content {
+        width: 90%; /* Ensure modal is wide enough on small screens */
+      }
+
+      .iframe-container {
+        width: 100%; /* Ensure the iframe uses full width */
+        height: auto; /* Allow height to adjust automatically */
+        padding-bottom: 125%; /* Maintain aspect ratio */
+        position: relative; /* Keep positioning relative */
+      }
+
+      .iframe-container iframe {
+        position: absolute; /* Position absolutely within the container */
+        top: 0; /* Align to the top */
+        left: 0; /* Align to the left */
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        border: none; /* Remove border */
+        border-radius: 10px; /* Rounded corners */
+      }
+    }
+
+    @media (min-width: 768px) {
+      body {
+        overflow: hidden; /* Prevent scrolling on larger screens */
+        padding-top: 20px; /* Space to move content down */
+      }
+    }
+
+  </style>
+
+
+
+
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#" th:href="@{/}">
+        <img src="/Images/puurr.png" alt="Logo" />
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <a class="nav-link" th:href="@{/}">Home</a>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/game}">Game</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown">
+              Services
+            </a>
+            <div class="dropdown-menu" aria-labelledby="servicesDropdown">
+              <a class="dropdown-item" th:href="@{/minting}">Minting</a>
+              <a class="dropdown-item" th:href="@{/staking}">Staking</a>
+              <a class="dropdown-item" th:href="@{/swap}">Swap</a>
+              <a class="dropdown-item" th:href="@{/vote}">Voting</a>
+              <a class="dropdown-item" th:href="@{/market}">Marketplace</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="openWalletModal()">Wallet</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Toast Notification Area -->
+
+<!-- Wallet Modal -->
+
+<main class="main-content">
+  <section class="hero">
+    <div class="container">
+      <h2>Swap</h2>
+      <p>Connect your wallet to Swap tokens on Cardano</p>
+      <a href="#" class="cta-button" onclick="openWalletModal()">Connect</a>
+    </div>
+  </section>
+
+  <div id="toast-container"></div>
+
+
+  <section class="assets">
+    <div class="container">
+      <div class="d-flex justify-content-center align-items-center" style="margin-top: 50px;">
+        <div class="d-flex flex-column justify-content-center align-items-center rounded-lg p-4" style="max-width: 100%; width: 100%;">
+          <div class="iframe-container" style="width: 100%; max-width: 900px; height: 0; padding-bottom: 125%; position: relative;">
+            <script type="module" src="https://embedded.muesliswap.com/embedded/embed.js"></script>
+            <script type="module">
+              setTimeout(() => {
+                import { initMuesliswapIframeBridge } from 'https://embedded.muesliswap.com/embedded/embed.js';
+                // Initialize with auto-connect to Nami wallet (or change this based on the preferred wallet)
+                initMuesliswapIframeBridge('nami');
+              }, 400);
+            </script>
+            <iframe
+                    src="https://embedded.muesliswap.com/swap?base=ca5408b255aa0c0ded99c5a8d598c1db89e67677e119adfe446bf074.&quote=c94ba9d7f91040d93a305a2c078838b870f4a70a06f41dabce952f47.70757572727479&e_theme=0&e_height=670px&e_width=450px&e_simple_view=t&e_hide_background=t"
+                    title="MuesliSwap Integrated Swap"
+                    width="100%"
+                    height="100%"
+                    style="position: absolute; top: 0; left: 0; border: none; border-radius: 10px;"
+                    id="muesliswap_integrated_swap_container"
+            ></iframe>
+            <!-- Overlay Div -->
+            <div id="overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.7); border-radius: 10px; display: flex; justify-content: center; align-items: center; color: black; font-weight: bold; opacity: 1; pointer-events: all;">
+              Connect your wallet to start swapping
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  </div>
+  </section>
+</main>
+
+
+<!-- Wallet Modal -->
+<div id="walletModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeWalletModal()">&times;</span>
+    <h2>Connect Wallet</h2>
+    <div class="d-flex flex-wrap">
+      <button type="button" onclick="connectWallet('nami')" class="btn btn-outline-primary m-1">
+        <img src="/Images/nami.jpg" alt="Nami Wallet" class="wallet-icon mr-2"> Nami
+      </button>
+      <button type="button" onclick="connectWallet('eternl')" class="btn btn-outline-primary m-1">
+        <img src="/Images/eternl.jpg" alt="Eternl Wallet" class="wallet-icon mr-2"> Eternl
+      </button>
+      <button type="button" onclick="connectWallet('lace')" class="btn btn-outline-primary m-1">
+        <img src="/Images/lace.jpg" alt="Lace Wallet" class="wallet-icon mr-2"> Lace
+      </button>
+      <button type="button" onclick="connectWallet('yoroi')" class="btn btn-outline-primary m-1">
+        <img src="/Images/yoroi.jpg" alt="Yoroi Wallet" class="wallet-icon mr-2"> Yoroi
+      </button>
+      <button type="button" onclick="connectWallet('vespr')" class="btn btn-outline-primary m-1">
+        <img src="/Images/vespr.png" alt="Vespr wallet" class="wallet-icon mr-2"> Vespr
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  const walletApis = {
+    nami: window.cardano.nami || null,
+    eternl: window.cardano.eternl || null,
+    lace: window.cardano.lace || null,
+    yoroi: window.cardano.yoroi || null,
+    vespr: window.cardano.vespr || null,
+  };
+
+  let walletAddress;
+  let isWalletConnected = false; // Global variable to track wallet connection status
+
+
+  async function connectWallet(walletType) {
+    try {
+      toggleOverlay(true); // Show overlay while trying to connect
+
+      if (typeof window.cardano === 'undefined') {
+        throw new Error("Cardano wallet provider not found.");
+      }
+
+      const wallet = await window.cardano[walletType]?.enable();
+      if (!wallet) throw new Error("Unsupported wallet or wallet not found.");
+
+      console.log("Connected Wallet:", wallet);
+
+      const allAddresses = await getAllWalletAddresses(wallet);
+      console.log("All Wallet Addresses:", allAddresses);
+
+      if (allAddresses.length === 0) {
+        throw new Error("No addresses found in the wallet. Please ensure you have a payment address.");
+      }
+
+      walletAddress = allAddresses[0]; // Store the first address in the walletAddress variable
+
+      const balance = await wallet.getBalance();
+      console.log('Wallet Balance:', balance);
+      const utxos = await wallet.getUtxos();
+      console.log('UTXOs:', utxos);
+
+      isWalletConnected = true;
+      closeWalletModal();
+      showToast("Wallet connected! You can now play the game.", 'success');
+      checkAssetsInWallet(wallet);
+      toggleOverlay(false); // Hide the overlay when connected
+
+      const playGameBtn = document.getElementById('playGameBtn');
+      if (playGameBtn) {
+        playGameBtn.classList.remove('disabled');
+        playGameBtn.onclick = function(event) {
+          checkWalletConnection(event, '/game');
+        };
+      } else {
+        console.error("Play Game button not found in the DOM.");
+      }
+
+      enableSwapFunctionality(); // Enable the swap functionality
+      showToast("You can now use the swap feature!", 'success');
+      initMuesliswapIframeBridge(walletType); // Dynamically initialize MuesliSwap
+
+    } catch (error) {
+      console.error(`Error connecting to ${walletType}:`, error);
+      showToast(`Error connecting to ${walletType}: ${error.message}`, 'error');
+      toggleOverlay(false); // Ensure the overlay is hidden on error
+    }
+  }
+
+  function toggleOverlay(isVisible) {
+    const overlay = document.getElementById('overlay');
+    overlay.style.display = isVisible ? 'flex' : 'none'; // Show or hide overlay
+  }
+
+  async function getAllWalletAddresses(wallet) {
+    try {
+      const usedAddresses = await wallet.getUsedAddresses();
+      const unusedAddresses = await wallet.getUnusedAddresses();
+      const rewardAddresses = await wallet.getRewardAddresses();
+      const allAddresses = [...usedAddresses, ...unusedAddresses, ...rewardAddresses];
+
+      console.log("All Wallet Addresses:", allAddresses);
+
+      if (allAddresses.length === 0) {
+        throw new Error("No wallet addresses found. Please check your wallet.");
+      }
+      return allAddresses;
+    } catch (error) {
+      console.error("Error fetching wallet addresses:", error);
+      showToast("Error fetching wallet addresses: " + error.message, "error");
+      return []; // Return empty array on error
+    }
+  }
+
+  function checkWalletConnection(event, gameUrl) {
+    event.preventDefault(); // Prevent the default action
+    if (isWalletConnected) {
+      window.location.href = gameUrl; // Navigate to the game
+    } else {
+      openWalletModal();
+      showToast("Please connect your wallet to play the game.", "info");
+    }
+  }
+
+
+  async function checkAssetsInWallet(wallet) {
+    try {
+      const assets = await wallet.getAssets(); // Retrieve all assets
+      const hasPolicyId = assets.some(asset => asset.policyId === 'ca5408b255aa0c0ded99c5a8d598c1db89e67677e119adfe446bf074');
+
+      if (hasPolicyId) {
+        console.log("Policy ID recognized in wallet.");
+        displayToast("Your policy ID is recognized in the wallet!", 'success');
+      } else {
+        console.log("Policy ID not found in wallet.");
+        showToast("Your policy ID is not recognized in the wallet.", 'info');
+      }
+    } catch (error) {
+      console.error("Error fetching assets:", error);
+      showToast("Error fetching assets: " + error.message, 'error');
+    }
+  }
+
+
+  function openWalletModal() {
+    const modal = document.getElementById("walletModal");
+    modal.style.display = "block"; // Show the modal
+  }
+
+  function closeWalletModal() {
+    const modal = document.getElementById("walletModal");
+    modal.style.display = "none"; // Hide the modal
+  }
+
+
+  function enableSwapFunctionality() {
+    const swapButton = document.getElementById('swapButton'); // Example ID for swap button
+    if (swapButton) {
+      swapButton.classList.remove('disabled'); // Enable swap button
+    }
+  }
+
+  // Close modal when clicking outside of it
+  window.onclick = function(event) {
+    if (event.target === document.getElementById('walletModal')) {
+      closeWalletModal();
+    }
+  }
+
+  // Close modal when clicking on the close button
+  document.querySelector('.close').onclick = closeWalletModal;
+
+  function showToast(message, isError = false) {
+    const toastContainer = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${isError ? 'danger' : 'success'} fade show`;
+    toast.innerText = message;
+    toast.style.position = 'relative';
+    toast.style.marginTop = '10px';
+    toast.style.zIndex = '1001';
+    toast.setAttribute('role', 'alert');
+    toastContainer.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => {
+        toastContainer.removeChild(toast);
+      }, 150); // Remove from DOM after fading out
+    }, 3000); // Display for 3 seconds
+  }
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

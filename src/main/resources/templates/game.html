@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purrty Cat Game</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      overflow: auto;
+    }
+
+    /* Lock scrollbar on larger screens */
+    @media (min-width: 768px) {
+      body {
+        overflow: hidden; /* Prevent scrolling */
+      }
+    }
+
+    .game-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 90vw;
+      max-width: 600px;
+    }
+
+    .gameboy-image {
+      width: 275%;
+      height: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    #gameCanvas {
+      position: absolute;
+      border: 1px solid #5865f2;
+      top: 25%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      width: 420px;
+      height: 640px;
+    }
+
+    #colorSelector {
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    /* Character selection container */
+    .character-selection {
+      position: absolute;
+      top: 10%; /* Position it on top of the game */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .cat-images {
+      display: flex;
+      overflow-x: auto; /* Allow horizontal scrolling */
+      scroll-behavior: smooth; /* Smooth scrolling */
+      padding: 10px;
+      width: 100%; /* Make sure it fills the container */
+      box-sizing: border-box; /* Include padding in width calculation */
+    }
+
+    .cat-images img {
+      width: 100px; /* Set a fixed width for cat images */
+      margin: 0 10px; /* Space between images */
+      border: 2px solid transparent; /* Default border */
+      transition: transform 0.2s, border 0.2s; /* Animation for hover effect */
+    }
+
+    .cat-images img:hover {
+      transform: scale(1.1); /* Enlarge on hover */
+      border: 2px solid #5865f2; /* Highlight border on hover */
+    }
+
+    /* Media Queries for Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        margin-top: 50px;
+      }
+      .gameboy-image {
+        width: 200%;
+      }
+      #gameCanvas {
+        width: 320px;
+        height: 480px;
+      }
+      #colorSelector {
+        font-size: 14px;
+      }
+    }
+
+
+
+    @media (max-width: 480px) {
+      .gameboy-image {
+        width: 150%;
+        margin-left: 45px;
+      }
+      #gameCanvas {
+        width: 260px;
+        height: 260px;
+        margin-left: 25px;
+        z-index: 1;
+        margin-top: 50px;
+      }
+      #colorSelector {
+        font-size: 12px;
+      }
+    }
+    @media (max-width: 320px) {
+      .gameboy-image {
+        width: 125%;
+      }
+      #gameCanvas {
+        width: 200px;
+        height: 300px;
+      }
+      #colorSelector {
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="game-container">
+  <img id="gameboyImage" src="/Images/gameboyblue.png" alt="Game Boy" class="gameboy-image">
+  <canvas id="gameCanvas" width="360" height="640"></canvas>
+
+  <div id="gameStatus" style="position: absolute; top: 20px; left: 20px; color: white; font-size: 20px;">
+    <span id="score">Score: 0</span>
+    <span id="stakeAddress" style="margin-left: 20px;"></span> <!-- Stake address always visible -->
+  </div>
+
+  <!-- Character Selection Container -->
+  <div class="character-selection" id="characterSelection">
+    <h2>Select Your Cat Gang Leader</h2>
+    <div class="cat-images" id="catImagesContainer">
+      <img src="/Images/Zombie.png" alt="Zombie Cat" onclick="selectCat('Zombie')">
+      <img src="/Images/Pirate.png" alt="Pirate Cat" onclick="selectCat('Pirate')">
+      <img src="/Images/Jason.png" alt="Jason Cat" onclick="selectCat('Jason')">
+      <img src="/Images/Kitsune.png" alt="Kitsune Cat" onclick="selectCat('Kitsune')">
+      <img src="/Images/Robot.png" alt="Robot Cat" onclick="selectCat('Robot')">
+      <img src="/Images/Clown.png" alt="Clown Cat" onclick="selectCat('Clown')">
+      <img src="/Images/Devil.png" alt="Devil Cat" onclick="selectCat('Devil')">
+      <img src="/Images/Angel.png" alt="Angel Cat" onclick="selectCat('Angel')">
+      <img src="/Images/Faraon.png" alt="Faron Cat" onclick="selectCat('Faron')">
+      <img src="/Images/Strawhat.png" alt="Strawhat Cat" onclick="selectCat('Strawhat')">
+    </div>
+    <input type="text" id="playerName" placeholder="Enter your name" />
+    <button id="startButton" onclick="startGame()">Start Game</button>
+  </div>
+</div>
+
+<div class="color-picker">
+  <select id="colorSelector" onchange="changeGameBoyColor()">
+    <option value="blue">Blue</option>
+    <option value="gray">Gray</option>
+    <option value="green">Green</option>
+    <option value="red">Red</option>
+    <option value="yellow">Yellow</option>
+  </select>
+</div>
+
+<script src="/js/game.js"></script>
+
+</body>
+</html>

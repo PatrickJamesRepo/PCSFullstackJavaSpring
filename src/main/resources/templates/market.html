@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <title>Purrty.io - Market</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    .navbar {
+      background-color: #6CACE4;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-brand img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    .nav-link {
+      color: white;
+      transition: color 0.3s;
+    }
+
+    .nav-link:hover {
+      color: #1f6e8c;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #6CACE4 0%, #1f6e8c 100%);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+      border-bottom: 5px solid #5865f2;
+    }
+
+    .responsive-banner {
+      width: 100%;
+      height: auto;
+      max-width: 800px;
+    }
+
+    .cta-button {
+      background-color: #5865f2;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 5px;
+      font-size: 1.2rem;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .cta-button:hover {
+      background-color: #4752c4;
+      transform: translateY(-2px);
+    }
+
+    .assets {
+      padding: 2rem 0;
+    }
+
+    .asset-card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: white;
+      transition: transform 0.2s;
+    }
+
+    .asset-card:hover {
+      transform: scale(1.05);
+    }
+
+    .wallet-icon {
+      width: 50px;
+      height: 50px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#" th:href="@{/}">
+        <img src="/Images/puurr.png" alt="Logo" />
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <a class="nav-link" th:href="@{/}">Home</a>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/game}">Game</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-toggle="dropdown">
+              Services
+            </a>
+            <div class="dropdown-menu" aria-labelledby="servicesDropdown">
+              <a class="dropdown-item" th:href="@{/minting}">Minting</a>
+              <a class="dropdown-item" th:href="@{/staking}">Staking</a>
+              <a class="dropdown-item" th:href="@{/swap}">Swap</a>
+              <a class="dropdown-item" th:href="@{/vote}">Voting</a>
+              <a class="dropdown-item" th:href="@{/market}">Marketplace</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="openWalletModal()">Wallet</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="main-content">
+  <section class="hero">
+    <div class="container">
+      <h2>Welcome to the Marketplace</h2>
+      <p>Description of the service.</p>
+      <a href="#" class="cta-button">Take Action</a>
+    </div>
+  </section>
+
+  <section class="assets">
+    <div class="container">
+      <h2>Details about the service</h2>
+      <!-- Add content specific to the service -->
+    </div>
+  </section>
+</main>
+
+
+<!-- Wallet Modal -->
+<div id="walletModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeWalletModal()">&times;</span>
+    <h2>Connect Wallet</h2>
+    <div class="d-flex flex-wrap">
+      <button type="button" onclick="connectWallet('nami')" class="btn btn-outline-primary m-1">
+        <img src="/Images/nami.jpg" alt="Nami Wallet" class="wallet-icon mr-2"> Nami
+      </button>
+      <button type="button" onclick="connectWallet('eternl')" class="btn btn-outline-primary m-1">
+        <img src="/Images/eternl.jpg" alt="Eternl Wallet" class="wallet-icon mr-2"> Eternl
+      </button>
+      <button type="button" onclick="connectWallet('lace')" class="btn btn-outline-primary m-1">
+        <img src="/Images/lace.jpg" alt="Lace Wallet" class="wallet-icon mr-2"> Lace
+      </button>
+      <button type="button" onclick="connectWallet('yoroi')" class="btn btn-outline-primary m-1">
+        <img src="/Images/yoroi.jpg" alt="Yoroi Wallet" class="wallet-icon mr-2"> Yoroi
+      </button>
+      <button type="button" onclick="connectWallet('vespr')" class="btn btn-outline-primary m-1">
+        <img src="/Images/vespr.png" alt="Vespr wallet" class="wallet-icon mr-2"> Vespr
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  const walletApis = {
+    nami: window.cardano.nami || null,
+    eternl: window.cardano.eternl || null,
+    lace: window.cardano.lace || null,
+    yoroi: window.cardano.yoroi || null,
+    vespr: window.cardano.vespr || null,
+  };
+
+  let walletAddress;
+  let isWalletConnected = false; // Global variable to track wallet connection status
+
+  async function connectWallet(walletType) {
+    try {
+      if (typeof window.cardano === 'undefined') {
+        throw new Error("Cardano wallet provider not found.");
+      }
+
+      const wallet = await window.cardano[walletType]?.enable();
+      if (!wallet) throw new Error("Unsupported wallet or wallet not found.");
+
+      console.log("Connected Wallet:", wallet);
+
+      const allAddresses = await getAllWalletAddresses(wallet);
+      console.log("All Wallet Addresses:", allAddresses);
+
+      if (allAddresses.length === 0) {
+        throw new Error("No addresses found in the wallet. Please ensure you have a payment address.");
+      }
+
+      // Capture the current wallet address
+      walletAddress = allAddresses[0]; // Store the first address in the walletAddress variable
+
+      const balance = await wallet.getBalance();
+      console.log('Wallet Balance:', balance);
+      const utxos = await wallet.getUtxos();
+      console.log('UTXOs:', utxos);
+
+      isWalletConnected = true;
+      closeWalletModal();
+      alert("Wallet connected! You can now play the game.");
+
+      // Enable the "Play Game" button
+      document.getElementById('playGameBtn').classList.remove('disabled');
+      document.getElementById('playGameBtn').onclick = function(event) {
+        checkWalletConnection(event, '/game');
+      };
+
+    } catch (error) {
+      console.error(`Error connecting to ${walletType}:`, error);
+      displayToast(`Error connecting to ${walletType}: ${error.message}`, 'error');
+    }
+  }
+
+
+
+
+  async function getAllWalletAddresses(wallet) {
+    try {
+      const usedAddresses = await wallet.getUsedAddresses();
+      const unusedAddresses = await wallet.getUnusedAddresses();
+      const rewardAddresses = await wallet.getRewardAddresses();
+      const allAddresses = [...usedAddresses, ...unusedAddresses, ...rewardAddresses];
+
+      console.log("All Wallet Addresses:", allAddresses);
+
+      if (allAddresses.length === 0) {
+        throw new Error("No wallet addresses found. Please check your wallet.");
+      }
+      return allAddresses;
+    } catch (error) {
+      console.error("Error fetching wallet addresses:", error);
+      displayToast("Error fetching wallet addresses: " + error.message, "error");
+      return [];
+    }
+  }
+
+  function checkWalletConnection(event, gameUrl) {
+    event.preventDefault(); // Prevent the default action
+    if (isWalletConnected) {
+      // If wallet is connected, navigate to the game
+      window.location.href = gameUrl;
+    } else {
+      // If not, open the wallet modal
+      openWalletModal();
+    }
+  }
+
+  function openWalletModal() {
+    const modal = document.getElementById("walletModal");
+    modal.style.display = "block"; // Show the modal
+  }
+
+  function closeWalletModal() {
+    const modal = document.getElementById("walletModal");
+    modal.style.display = "none"; // Hide the modal
+  }
+
+  window.onclick = function(event) {
+    if (event.target === document.getElementById('walletModal')) {
+      closeWalletModal();
+    }
+  }
+
+  document.querySelector('.close').onclick = closeWalletModal;
+</script>
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
