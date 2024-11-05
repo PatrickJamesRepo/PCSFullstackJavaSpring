@@ -1,4 +1,6 @@
+# Web View
 ![PCS View](./pcs1.png)
+# Mobile View
 ![Mobile View](./mobilepcs.png)
 
 # Purrty Cats NFT Platform
